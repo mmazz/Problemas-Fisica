@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import numpy as np
 import scipy.integrate as integrate
 import matplotlib.pyplot as plt
@@ -18,7 +17,7 @@ error = 5*np.random.uniform(-1,1,size=(len(f)))/1000000
 
 normError = np.linalg.norm(error,2)
 
- 
+
 def K(s,t):# El kernel, lo que me describe a mi sistema
     k = d/np.power((np.power(d,2)+np.power(s-t,2)),3/2)
     return k
@@ -27,14 +26,14 @@ def F2(t): # otra distribucion de masas
     f = np.sin(np.pi*t) + 0.5*np.sin(2*np.pi*t)
     return f
 
-def g(s): # la componente de la gravedad perpendicular, en s, es el dato 
+def g(s): # la componente de la gravedad perpendicular, en s, es el dato
     g, e = integrate.quad(lambda t: np.dot(K(s,t),F2(t)),0,1)
     return g
 
 for i in range(len(x)):
     f[i] = F2(x[i])
-    b[i] = g(x[i])     
-    
+    b[i] = g(x[i])
+
 
 def Agrav(d,n):
     A = np.zeros([n,n])
@@ -47,7 +46,7 @@ def Agrav(d,n):
         for j in range(n):
             A[i][j] = (d/n)*(np.power(np.power(d,2)+np.power(((i-j)/n),2),-3/2))
     return A
-          
+
 
 def matrizFiltroTikh(sigma,lamb):
     filtro = np.zeros(len(sigma))
@@ -61,7 +60,7 @@ def matrizFiltroTSVD(sigma,lamb):
         filtro[j] =  1
     return filtro
 
-    
+
 def TikhonovSVD(A,b,param):
     global flag
     n = A.shape[1]
@@ -109,7 +108,7 @@ def TSVD(A,b,param):
 index = np.linspace(1,n,n)
 AGrav = Agrav(0.25,n)  # Matriz A
 Ai = np.linalg.inv(AGrav)
-xsol = np.linalg.tensorsolve(Ai,b)  # El X, es decir mi distribucion f 
+xsol = np.linalg.tensorsolve(Ai,b)  # El X, es decir mi distribucion f
 bsol = np.dot(AGrav,xsol)  #
 solExacta = np.dot(AGrav,f) # Pruebo que efectivamente esta A es lo que quiero
 #plt.plot(i,solExacta)  # Me fijo si recupero la b (es decir la g)
@@ -118,8 +117,8 @@ solExacta = np.dot(AGrav,f) # Pruebo que efectivamente esta A es lo que quiero
 #RECUPERE! TENGO LA A! pero no estaria teniendo la f, tengo un factor 40
 # la cond(A) es gigante.... pero me esperaba cualquier cosa pero sin ese factor de escala
 
-b = np.dot(AGrav,f) 
-bError = b + error 
+b = np.dot(AGrav,f)
+bError = b + error
 ################################################################################
 ############################# Veamos el grafico de Picard
 ################################################################################
@@ -228,7 +227,7 @@ parametros = [0.00000001,0.0000001,0.00001,0.0001,0.1,1,2,5]
 xnormerror = np.linspace(0,max(parametros))
 normErrorVec = np.zeros(len(xnormerror))
 normxString = r'$||x_{\lambda}||_2$'
-normAxbString = r'$||Ax_{\lambda}-b||_2$' 
+normAxbString = r'$||Ax_{\lambda}-b||_2$'
 normErrorString = r'$||e||_2$'
 for i in range(len(xnormerror)):
     normErrorVec[i] = normError
@@ -378,5 +377,5 @@ plt.yticks(fontsize=FontTicks)
 plt.savefig('Python-GCVTSVD.png')
 
 ################################################################################
-############################# 
+#############################
 ################################################################################
